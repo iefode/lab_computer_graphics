@@ -32,17 +32,25 @@ def addPointInRolygon():
     if (points.__len__() < 4):
         points.append(newPoint)
     else:
+        # print "points"
+        # print points
+        # print "new point"
+        # print newPoint
         line.append(newPoint)
         line.append(points[points.__len__() - 1])
-        if (checkLine()):
+        # print "line"
+        # print line
+        if not (checkLine()):
             points.append(newPoint)
         while (line.__len__() != 0):
             line.pop()
+        # print "line"
+        # print line
 
 
 # generate random polygon
 def generatePolygon():
-    numberPoint = rnd.randint(3, 6)
+    numberPoint = rnd.randint(3, 5)
     print numberPoint
     # print numberPoint
     while (points.__len__() != numberPoint):
@@ -54,11 +62,16 @@ def generateLinePoints():
     while(line.__len__() != 2):
         line.append([rnd.randint(-10, 10),
                        rnd.randint(-10, 10)])
-    print line
+    # print line
 
 def checkLine():
     for currentPoint in points:
         nextPoint = points[(points.index(currentPoint) + 1) % points.__len__()]
+        # print "iteration"
+        # print currentPoint
+        # print nextPoint
+        # print line[0]
+        # print line[1]
         if (currentPoint in line or
             nextPoint in line):
             return True
@@ -68,17 +81,24 @@ def checkLine():
         b1 = None
         b2 = None
         if ((currentPoint[0] - nextPoint[0]) != 0):
-            k1 = (nextPoint[1] - currentPoint[1])/(nextPoint[0] - currentPoint[0])
-            b1 = k1*currentPoint[0] - currentPoint[1]
+            k1 = float(nextPoint[1] - currentPoint[1])/(nextPoint[0] - currentPoint[0])
+            b1 = float(-k1*currentPoint[0] + currentPoint[1])
         if ((line[1][0] - line[0][0]) != 0):
-            k2 = (line[1][1] - line[0][1]) / (line[1][0] - line[0][0])
-            b2 = k2*line[0][0] - line[0][1]
+            k2 = float(line[1][1] - line[0][1]) / (line[1][0] - line[0][0])
+            b2 = float(-k2*line[0][0] + line[0][1])
 
         maxLineY = max(line[0][1], line[1][1])
         minLineY = min(line[0][1], line[1][1])
         maxPointsY = max(currentPoint[1], nextPoint[1])
         minPointsY = min(currentPoint[1], nextPoint[1])
-
+        # print "k1"
+        # print k1
+        # print "b1"
+        # print b1
+        # print "k2"
+        # print k2
+        # print "b2"
+        # print b2
         if (k1 == k2) and (b1 == b2):
             if (k1 == None and currentPoint[0] != line[0][0]):
                 continue
@@ -88,25 +108,28 @@ def checkLine():
             else:
                 return True
         elif (k2 == None):
-            y = k1 * line[1][0] + b1 - line[1][1]
+            y = k1 * line[0][0] + b1
             if (minPointsY <= y <= maxPointsY):
                 return True
             else:
                 continue
         elif (k1 == None):
-            y = k2 * currentPoint[0] + b2 - currentPoint[1]
+            y = k2 * currentPoint[0] + b2
             if (minLineY <= y <= maxLineY):
                 return True
             else:
                 continue
+        elif (k1 == k2):
+            continue
 
         # test this
-        y3 = k1 * line[0][0] + b1 - line[0][1]
-        y4 = k2 * line[1][0] + b2 - line[1][1]
-        # print y3
-        # print y4
-
-        if (y3 * y4 <= 0):
+        x = (b2 - b1) / (k1 - k2)
+        # print x
+        y = k1*x + b1
+        # print y
+        #FIX ME
+        if (minLineY <= y <= maxLineY and
+            minPointsY <= y <= maxPointsY):
             return True
         else:
             continue
