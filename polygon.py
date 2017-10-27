@@ -41,7 +41,7 @@ def addPointInRolygon():
         line.append(polygon[numberPoint - 1])
         # print "line"
         # print line
-        if not (checkLine()):
+        if not (checkLine(True)):
             polygon.append(newPoint)
         while (line.__len__() != 0):
             line.pop()
@@ -65,9 +65,13 @@ def generateLinePoints():
                        rnd.randint(-10, 10)])
     # print line
 
-def checkLine():
+def checkLine(flagCheckPoint):
     for currentPoint in polygon:
-        nextPoint = polygon[(polygon.index(currentPoint) + 1) % polygon.__len__()]
+        if (flagCheckPoint and
+            (polygon.index(currentPoint) >= polygon.__len__() - 2)):
+            continue
+        else:
+            nextPoint = polygon[(polygon.index(currentPoint) + 1) % polygon.__len__()]
         # print "iteration"
         # print currentPoint
         # print nextPoint
@@ -177,7 +181,7 @@ drawingLine()
 # print points
 
 drawingPolygon(polygon.__len__())
-print checkLine()
+print checkLine(False)
 
 plt.axes()
 plt.axis('scaled')
