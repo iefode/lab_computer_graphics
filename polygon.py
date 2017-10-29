@@ -43,7 +43,7 @@ def addPointInRolygon(points):
         for i in range(n):
             while (line.__len__() != 0):
                 line.pop()
-            if (i == 0):
+            if (i == 1):
                 #check line as newPoint and polygon[0]
                 idx = 0
                 tempPoint = polygon.pop(0)
@@ -54,7 +54,7 @@ def addPointInRolygon(points):
             line.append(tempPoint)
             if not(checkLine(True)):
                     polygon.insert(idx, tempPoint)
-                    if (i == 1):
+                    if (i == n-1):
                         polygon.append(newPoint)
             else:
                 polygon.insert(idx, tempPoint)
@@ -62,7 +62,7 @@ def addPointInRolygon(points):
 
 # generate random polygon
 def generatePolygon():
-    numberPoint = rnd.randint(4, 4)
+    numberPoint = rnd.randint(3, 10)
     while (polygon.__len__() != numberPoint):
         addPointInRolygon(numberPoint)
 
