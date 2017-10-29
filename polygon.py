@@ -21,7 +21,7 @@ def parseStringToPolygon():
 def parseInputFile():
     numberPoint = int(inputFile.readline())
     while (polygon.__len__() != numberPoint):
-        polygon.append(parseStringToPoint())
+        polygon.append(parseStringToPolygon())
     while (line.__len__() != 2):
         line.append(parseStringToPolygon())
 
@@ -157,14 +157,23 @@ def printInfo():
     outputFile.write("\nCoordinates of points of line:\n" + line.__str__())
     outputFile.write("\nLine and polygon: " + checkLine(False).__str__())
 
-# parseInputFile()
-generatePolygon()
-generateLinePoints()
-printInfo()
-drawingLine()
-drawingPolygon(polygon.__len__())
-print checkLine(False)
+def output():
+    printInfo()
+    drawingLine()
+    drawingPolygon(polygon.__len__())
+    print checkLine(False)
+    plt.axes()
+    plt.axis('scaled')
+    plt.show()
 
-plt.axes()
-plt.axis('scaled')
-plt.show()
+# parseInputFile()
+mode = input("Enter a mode: 1 -manual, 2 - auto\n")
+if (mode == 1):
+    parseInputFile()
+    output()
+elif (mode == 2):
+    generatePolygon()
+    generateLinePoints()
+    output()
+else:
+    print "Uncorrect mode!"
