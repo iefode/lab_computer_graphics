@@ -1,0 +1,6 @@
+Number of point: 4
+Coordinates of points of poligon:
+[[9, 7], [7, 9], [-4, 9], [2, 1]]
+Coordinates of points of line:
+[[-4, -4], [2, -4]]
+Line and polygon: False

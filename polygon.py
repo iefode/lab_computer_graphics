@@ -26,61 +26,63 @@ def parseInputFile():
         line.append(parseStringToPolygon())
 
 #adding new point in polygon
-def addPointInRolygon():
+def addPointInRolygon(points):
     newPoint = [rnd.randint(-10, 10),
                 rnd.randint(-10, 10)]
+    if (newPoint in polygon):
+        return
     numberPoint = polygon.__len__()
-    if (numberPoint < 4):
+    if (numberPoint < 3):
         polygon.append(newPoint)
     else:
-        # print "points"
-        # print points
-        # print "new point"
-        # print newPoint
-        line.append(newPoint)
-        line.append(polygon[numberPoint - 1])
-        # print "line"
-        # print line
-        if not (checkLine(True)):
-            polygon.append(newPoint)
-        while (line.__len__() != 0):
-            line.pop()
-        # print "line"
-        # print line
-
+        #check last point
+        if (numberPoint == points-1):
+            n = 2
+        else:
+            n = 1
+        for i in range(n):
+            while (line.__len__() != 0):
+                line.pop()
+            if (i == 0):
+                #check line as newPoint and polygon[0]
+                idx = 0
+                tempPoint = polygon.pop(0)
+            else:
+                idx = numberPoint - 1
+                tempPoint = polygon.pop(numberPoint - 1)
+            line.append(newPoint)
+            line.append(tempPoint)
+            if not(checkLine(True)):
+                    polygon.insert(idx, tempPoint)
+                    if (i == 1):
+                        polygon.append(newPoint)
+            else:
+                polygon.insert(idx, tempPoint)
+                return
 
 # generate random polygon
 def generatePolygon():
-    numberPoint = rnd.randint(3, 5)
-    print numberPoint
-    # print numberPoint
+    numberPoint = rnd.randint(4, 4)
     while (polygon.__len__() != numberPoint):
-        addPointInRolygon()
-    print polygon
+        addPointInRolygon(numberPoint)
 
 # generate random line
 def generateLinePoints():
+    while (line.__len__() != 0):
+        line.pop()
     while(line.__len__() != 2):
         line.append([rnd.randint(-10, 10),
                        rnd.randint(-10, 10)])
-    # print line
 
 def checkLine(flagCheckPoint):
     for currentPoint in polygon:
-        if (flagCheckPoint and
-            (polygon.index(currentPoint) >= polygon.__len__() - 2)):
+        indexCurrentPoint = polygon.index(currentPoint)
+        if (flagCheckPoint and (indexCurrentPoint == polygon.__len__() - 1)):
             continue
-        else:
-            nextPoint = polygon[(polygon.index(currentPoint) + 1) % polygon.__len__()]
-        # print "iteration"
-        # print currentPoint
-        # print nextPoint
-        # print line[0]
-        # print line[1]
+        nextPoint = polygon[(indexCurrentPoint + 1) % polygon.__len__()]
         if (currentPoint in line or
             nextPoint in line):
             return True
-        # print nextPoint
         k1 = None
         k2 = None
         b1 = None
@@ -96,14 +98,6 @@ def checkLine(flagCheckPoint):
         minLineY = min(line[0][1], line[1][1])
         maxPolygonY = max(currentPoint[1], nextPoint[1])
         minPolygonY = min(currentPoint[1], nextPoint[1])
-        # print "k1"
-        # print k1
-        # print "b1"
-        # print b1
-        # print "k2"
-        # print k2
-        # print "b2"
-        # print b2
         if (k1 == k2) and (b1 == b2):
             if (k1 == None and currentPoint[0] != line[0][0]):
                 continue
@@ -126,13 +120,8 @@ def checkLine(flagCheckPoint):
                 continue
         elif (k1 == k2):
             continue
-
-        # test this
         x = (b2 - b1) / (k1 - k2)
-        # print x
         y = k1*x + b1
-        # print y
-        #FIX ME
         if (minLineY <= y <= maxLineY and
             minPolygonY <= y <= maxPolygonY):
             return True
@@ -166,20 +155,13 @@ def printInfo():
     outputFile.write("Number of point: " + polygon.__len__().__str__())
     outputFile.write("\nCoordinates of points of poligon:\n" + polygon.__str__())
     outputFile.write("\nCoordinates of points of line:\n" + line.__str__())
-    # outputFile.write("\nLine and polygon: " + checkLine().__str__())
-    # print "\nLine and polygon: " + checkLine().__str__()
+    outputFile.write("\nLine and polygon: " + checkLine(False).__str__())
 
 # parseInputFile()
 generatePolygon()
 generateLinePoints()
-
-# printInfo()
-
-#drawing of objects
+printInfo()
 drawingLine()
-# print points.__len__()
-# print points
-
 drawingPolygon(polygon.__len__())
 print checkLine(False)
 
