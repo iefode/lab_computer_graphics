@@ -163,6 +163,7 @@ def output():
     drawingPolygon(polygon.__len__())
     print checkLine(False)
     plt.axes()
+    plt.grid()
     plt.axis('scaled')
     plt.show()
 
