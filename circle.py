@@ -73,7 +73,10 @@ def output():
 mode = input("Enter a mode: 1 -manual, 2 - auto\n")
 if (mode == 1):
     parseInputFile()
-    output()
+    if (checkRadius()):
+        output()
+    else:
+        print "\nIs not possible for this case"
 elif (mode == 2):
     generateCircles()
     output()
