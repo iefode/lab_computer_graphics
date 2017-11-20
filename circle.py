@@ -48,6 +48,8 @@ def checkRadius():
         y = (circlesCentres[0][1] * d1 + circlesCentres[1][1] * d2) / d
         circlesCentres.append([x, y])
         return True
+    if (d+circlesRadius[0]+circlesRadius[1] < 2 * circlesRadius[2]):
+        return False
     if (circlesRadius[0] + circlesRadius[1] == d):
         if (circlesCentres[0][0] < circlesCentres[1][0]):
             startPoint = circlesCentres[0]
@@ -146,12 +148,12 @@ def drawingArc():
         if (i == 0):
             tmp = angles[1] - math.pi
         else:
-            tmp = angles[1]
+            tmp = -angles[0]
         angle = []
         if (i == 0):
             max_angle = angles[0]
         else:
-            max_angle = angles[0] + math.pi
+            max_angle = math.pi - angles[1]
         while tmp < max_angle:
             angle.append(tmp)
             tmp += math.pi / 180
@@ -169,7 +171,7 @@ def drawingArc():
                 drawLine = plt.Line2D((xPrev, x),
                                       (yPrev, y),
                                       lw=0.5,
-                                      markeredgecolor='r')
+                                      color='r')
                 plt.gca().add_line(drawLine)
                 xPrev = x
                 yPrev = y
