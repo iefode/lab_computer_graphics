@@ -8,6 +8,7 @@ outputFile = open("outputCircle.txt", "w")
 circlesCentres = []
 circlesRadius = []
 arc = []
+angles = []
 
 def parseStringToPoint():
     point = inputFile.readline()
@@ -98,22 +99,33 @@ def checkRadius():
             tmp = startPoint[1]
             y1 = tmp + y
             y2 = tmp - y
-        print tmp
-        print x
         circlesCentres.append([x, y1])
         circlesCentres.append([x, y2])
         return True
     else:
         return False
 
-def findPoints():
-    points = []
+def findAngles():
+    j = 2
+    while (j != circlesCentres.__len__()):
+        angle = []
+        for i in range(2):
+            if(circlesCentres[2][0] - circlesCentres[i][0] == 0):
+                angle.append(0)
+            else:
+                tmp = math.atan((circlesCentres[2][1] - circlesCentres[i][1]) / (circlesCentres[2][0] - circlesCentres[i][0]))
+                if (j == 3):
+                    tmp += math.pi
+                angle.append(tmp)
+        angle.sort()
+        angles.append(angle)
+        j += 1
 
 def drawingCircles():
     print circlesCentres
     print circlesRadius
-    circle = []
 
+    circle = []
     ax = plt.gca()
     ax.cla()
     for i in range(2):
@@ -123,22 +135,67 @@ def drawingCircles():
                                   color='b',
                                   fill=False))
         ax.add_patch(circle[i])
-    circle.append(plt.Circle((circlesCentres[2][0],
-                              circlesCentres[2][1]),
-                             circlesRadius[2],
-                             color='r',
-                             fill=False))
-    ax.add_patch(circle[2])
-    if (circlesCentres.__len__() == 4):
-         circle.append(plt.Circle((circlesCentres[3][0],
-                              circlesCentres[3][1]),
-                             circlesRadius[2],
-                             color='g',
-                             fill=False))
-         ax.add_patch(circle[3])
+    if (circlesCentres.__len__() == 3):
+        circle.append(plt.Circle((circlesCentres[2][0],
+                                  circlesCentres[2][1]),
+                                 circlesRadius[2],
+                                 color='r',
+                                 fill=False))
+        ax.add_patch(circle[2])
+    else:
+        drawingArc()
 
 def drawingArc():
-    return
+    findAngles()
+    print angles
+    angle = range(0, 361, 1)
+    for a in angle:
+        if (a == 0):
+            r = 5
+            xPrev = 5 * math.cos(a)
+            yPrev = 5 * math.sin(a)
+        else:
+            x = r * math.cos(math.pi / 180 * a)
+            y = r * math.sin(math.pi / 180 * a)
+
+            drawLine = plt.Line2D((xPrev, x),
+                                  (yPrev, y),
+                                  lw=0.5,
+                                  markeredgecolor='r')
+            plt.gca().add_line(drawLine)
+
+            xPrev = x
+            yPrev = y
+
+
+
+    # for i in range(2):
+    #     angle = []
+        # range(angles[i][0], angles[i][1], 1)
+        # grad = math.pi / 180
+        # index = int((angles[i][1] - angles[i][0]) / grad)
+        # for j in range(index-1):
+        #     value = angles[i][0] + grad*j
+        #     angle.append(value)
+        # angle.append(angles[i][1])
+        # xPrev = None
+        # yPrev = None
+        # for a in angle:
+        #     if (xPrev == None):
+        #         xPrev = circlesCentres[2 + i][0] + circlesRadius[2] * math.cos(a)
+        #         yPrev = circlesCentres[2 + i][1] + circlesRadius[2] * math.sin(a)
+        #         print xPrev
+        #         print yPrev
+        #         continue
+        #     x = float(circlesCentres[2 + i][0] + circlesRadius[2] * math.cos(a))
+        #     y = circlesCentres[2 + i][1] + circlesRadius[2] * math.sin(a)
+        #     drawLine = plt.Line2D((xPrev, yPrev),
+        #                           (x, y),
+        #                           lw=2.5,
+        #                           markeredgecolor='r')
+        #     plt.gca().add_line(drawLine)
+        #     xPrev = x
+        #     yPrev = y
 
 def printInfo():
     outputFile.write("Circles: " + circlesCentres.__str__() + ' ' + circlesRadius.__str__())
