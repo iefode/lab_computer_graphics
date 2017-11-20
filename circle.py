@@ -106,20 +106,13 @@ def checkRadius():
         return False
 
 def findAngles():
-    j = 2
-    while (j != circlesCentres.__len__()):
-        angle = []
-        for i in range(2):
-            if(circlesCentres[2][0] - circlesCentres[i][0] == 0):
-                angle.append(0)
-            else:
-                tmp = math.atan((circlesCentres[2][1] - circlesCentres[i][1]) / (circlesCentres[2][0] - circlesCentres[i][0]))
-                if (i == 0):
-                    tmp -= math.pi
-                angle.append(tmp)
-        angle.sort()
-        angles.append(angle)
-        j += 1
+    for i in range(2):
+        if(circlesCentres[2][0] - circlesCentres[i][0] == 0):
+            angles.append(0)
+        else:
+            tmp = math.atan((circlesCentres[2][1] - circlesCentres[i][1]) / (circlesCentres[2][0] - circlesCentres[i][0]))
+            angles.append(tmp)
+    angles.sort()
 
 def drawingCircles():
     print circlesCentres
@@ -148,64 +141,39 @@ def drawingCircles():
 def drawingArc():
     findAngles()
     print angles
-    angles[0][0] *= 180 / math.pi
-    angles[0][1] *= 180 / math.pi
-    print angles[0]
-    tmp = angles[0][0]
-    angle = []
-    while tmp < angles[0][1]:
-        angle.append(tmp)
-        tmp += 1
-    angle.append(angles[0][1])
-
-    print angle
-
-    r = circlesRadius[2]
-    for a in angle:
-        if (a == angle[0]):
-            xPrev = circlesCentres[2][0] + r * math.cos(math.pi / 180 * a)
-            yPrev = circlesCentres[2][1] + r * math.sin(math.pi / 180 * a)
+    i = 0
+    while (i != circlesCentres.__len__() - 2):
+        if (i == 0):
+            tmp = angles[1] - math.pi
         else:
-            x = circlesCentres[2][0] + r * math.cos(math.pi / 180 * a)
-            y = circlesCentres[2][1] + r * math.sin(math.pi / 180 * a)
+            tmp = angles[1]
+        angle = []
+        if (i == 0):
+            max_angle = angles[0]
+        else:
+            max_angle = angles[0] + math.pi
+        while tmp < max_angle:
+            angle.append(tmp)
+            tmp += math.pi / 180
+        angle.append(max_angle)
 
-            drawLine = plt.Line2D((xPrev, x),
-                                  (yPrev, y),
-                                  lw=0.5,
-                                  markeredgecolor='r')
-            plt.gca().add_line(drawLine)
-            xPrev = x
-            yPrev = y
+        for a in angle:
+            if (a == angle[0]):
+                r = circlesRadius[2]
+                xPrev = circlesCentres[2 + i][0] + r * math.cos(a)
+                yPrev = circlesCentres[2 + i][1] + r * math.sin(a)
+            else:
+                x = circlesCentres[2 + i][0] + r * math.cos(a)
+                y = circlesCentres[2 + i][1] + r * math.sin(a)
 
-
-
-    # for i in range(2):
-    #     angle = []
-        # range(angles[i][0], angles[i][1], 1)
-        # grad = math.pi / 180
-        # index = int((angles[i][1] - angles[i][0]) / grad)
-        # for j in range(index-1):
-        #     value = angles[i][0] + grad*j
-        #     angle.append(value)
-        # angle.append(angles[i][1])
-        # xPrev = None
-        # yPrev = None
-        # for a in angle:
-        #     if (xPrev == None):
-        #         xPrev = circlesCentres[2 + i][0] + circlesRadius[2] * math.cos(a)
-        #         yPrev = circlesCentres[2 + i][1] + circlesRadius[2] * math.sin(a)
-        #         print xPrev
-        #         print yPrev
-        #         continue
-        #     x = float(circlesCentres[2 + i][0] + circlesRadius[2] * math.cos(a))
-        #     y = circlesCentres[2 + i][1] + circlesRadius[2] * math.sin(a)
-        #     drawLine = plt.Line2D((xPrev, yPrev),
-        #                           (x, y),
-        #                           lw=2.5,
-        #                           markeredgecolor='r')
-        #     plt.gca().add_line(drawLine)
-        #     xPrev = x
-        #     yPrev = y
+                drawLine = plt.Line2D((xPrev, x),
+                                      (yPrev, y),
+                                      lw=0.5,
+                                      markeredgecolor='r')
+                plt.gca().add_line(drawLine)
+                xPrev = x
+                yPrev = y
+        i += 1
 
 def printInfo():
     outputFile.write("Circles: " + circlesCentres.__str__() + ' ' + circlesRadius.__str__())
