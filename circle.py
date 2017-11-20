@@ -114,8 +114,8 @@ def findAngles():
                 angle.append(0)
             else:
                 tmp = math.atan((circlesCentres[2][1] - circlesCentres[i][1]) / (circlesCentres[2][0] - circlesCentres[i][0]))
-                if (j == 3):
-                    tmp += math.pi
+                if (i == 0):
+                    tmp -= math.pi
                 angle.append(tmp)
         angle.sort()
         angles.append(angle)
@@ -148,22 +148,32 @@ def drawingCircles():
 def drawingArc():
     findAngles()
     print angles
-    angle = range(0, 361, 1)
+    angles[0][0] *= 180 / math.pi
+    angles[0][1] *= 180 / math.pi
+    print angles[0]
+    tmp = angles[0][0]
+    angle = []
+    while tmp < angles[0][1]:
+        angle.append(tmp)
+        tmp += 1
+    angle.append(angles[0][1])
+
+    print angle
+
+    r = circlesRadius[2]
     for a in angle:
-        if (a == 0):
-            r = 5
-            xPrev = 5 * math.cos(a)
-            yPrev = 5 * math.sin(a)
+        if (a == angle[0]):
+            xPrev = circlesCentres[2][0] + r * math.cos(math.pi / 180 * a)
+            yPrev = circlesCentres[2][1] + r * math.sin(math.pi / 180 * a)
         else:
-            x = r * math.cos(math.pi / 180 * a)
-            y = r * math.sin(math.pi / 180 * a)
+            x = circlesCentres[2][0] + r * math.cos(math.pi / 180 * a)
+            y = circlesCentres[2][1] + r * math.sin(math.pi / 180 * a)
 
             drawLine = plt.Line2D((xPrev, x),
                                   (yPrev, y),
                                   lw=0.5,
                                   markeredgecolor='r')
             plt.gca().add_line(drawLine)
-
             xPrev = x
             yPrev = y
 
