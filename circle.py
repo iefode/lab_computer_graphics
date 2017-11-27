@@ -48,9 +48,9 @@ def checkRadius():
         y = (circlesCentres[0][1] * d1 + circlesCentres[1][1] * d2) / d
         circlesCentres.append([x, y])
         return True
-    if (d+circlesRadius[0]+circlesRadius[1] < 2 * circlesRadius[2]):
-        return False
-    if (circlesRadius[0] + circlesRadius[1] == d):
+    # if (d+circlesRadius[0]+circlesRadius[1] < 2 * circlesRadius[2] and d <= circlesRadius[0]+circlesRadius[1]):
+    #     return False
+    if (circlesRadius[0] + circlesRadius[1] == d and d+circlesRadius[0]+circlesRadius[1] == 2*circlesRadius[2]):
         if (circlesCentres[0][0] < circlesCentres[1][0]):
             startPoint = circlesCentres[0]
             r = circlesRadius[0]
@@ -63,47 +63,60 @@ def checkRadius():
 
         return True
     if (abs(d1 - d2) < d < d1 + d2):
-        startPoint = circlesCentres[0]
-        a = circlesRadius[2] - circlesRadius[1]
-        b = circlesRadius[2] - circlesRadius[0]
-        if (a + b <= d or
-                        a + d <= b or
-                        b + d <= a):
-            return False
-        if (circlesCentres[0][0] > circlesCentres[1][0]):
-            startPoint = circlesCentres[1]
-            tmp = a
-            a = b
-            b = tmp
-        #cos of angle in triangle
-        angle = (b**2 + d**2 - a**2)/(2*d*b)
-        #projection of side triangle to d
-        x = b * angle
-        angle = (1 - angle**2)**0.5
-        #high in triangle
-        y = b * angle
-        #converting relative coordinates (d) to absolute1
-        if (circlesCentres[1][0] - circlesCentres[0][0]) != 0:
-            k = float(circlesCentres[1][1] - circlesCentres[0][1])/(circlesCentres[1][0] - circlesCentres[0][0])
-            b = startPoint[1] - angle * startPoint[0]
-            angle = k
+        if (d + circlesRadius[0] + circlesRadius[1] == 2*circlesRadius[2]):
+            r = circlesRadius[2] - circlesRadius[0]
+            angle = float(circlesCentres[1][1] - circlesCentres[0][1])/(circlesCentres[1][0] - circlesCentres[0][0])
             angle = math.atan(angle)
-            x = x*math.cos(angle) + startPoint[0]
+            deltaX = r * math.cos(angle)
+            deltaY = r * math.sin(angle)
+            x = circlesCentres[0][0] + deltaX
+            y = circlesCentres[0][1] + deltaY
+            circlesCentres.append([x, y])
+            return True
+        # elif (d + circlesRadius[0] + circlesRadius[1] < 2*circlesRadius[2] and d == circlesRadius[0] + circlesRadius[1]):
+        #     return False
         else:
-            k = None
-            b = None
-            x += startPoint[0]
-        if (circlesCentres[1][1] - circlesCentres[0][1]) != 0:
-            tmp = k*x + b
-            y1 = y*math.sin(angle) + tmp
-            y2 = -y*math.sin(angle) + tmp
-        else:
-            tmp = startPoint[1]
-            y1 = tmp + y
-            y2 = tmp - y
-        circlesCentres.append([x, y1])
-        circlesCentres.append([x, y2])
-        return True
+            startPoint = circlesCentres[0]
+            a = circlesRadius[2] - circlesRadius[1]
+            b = circlesRadius[2] - circlesRadius[0]
+            if (a + b <= d or
+                            a + d <= b or
+                            b + d <= a):
+                return False
+            if (circlesCentres[0][0] > circlesCentres[1][0]):
+                startPoint = circlesCentres[1]
+                tmp = a
+                a = b
+                b = tmp
+            #cos of angle in triangle
+            angle = (b**2 + d**2 - a**2)/(2*d*b)
+            #projection of side triangle to d
+            x = b * angle
+            angle = (1 - angle**2)**0.5
+            #high in triangle
+            y = b * angle
+            #converting relative coordinates (d) to absolute1
+            if (circlesCentres[1][0] - circlesCentres[0][0]) != 0:
+                k = float(circlesCentres[1][1] - circlesCentres[0][1])/(circlesCentres[1][0] - circlesCentres[0][0])
+                b = startPoint[1] - angle * startPoint[0]
+                angle = k
+                angle = math.atan(angle)
+                x = x*math.cos(angle) + startPoint[0]
+            else:
+                k = None
+                b = None
+                x += startPoint[0]
+            if (circlesCentres[1][1] - circlesCentres[0][1]) != 0:
+                tmp = k*x + b
+                y1 = y*math.sin(angle) + tmp
+                y2 = -y*math.sin(angle) + tmp
+            else:
+                tmp = startPoint[1]
+                y1 = tmp + y
+                y2 = tmp - y
+            circlesCentres.append([x, y1])
+            circlesCentres.append([x, y2])
+            return True
     else:
         return False
 
@@ -137,7 +150,7 @@ def drawingCircles():
                                  color='r',
                                  fill=False))
         ax.add_patch(circle[2])
-    else:
+    elif (circlesCentres.__len__() == 4):
         drawingArc()
 
 def drawingArc():
@@ -196,6 +209,12 @@ if (mode == 1):
         output()
     else:
         print "\nIs not possible for this case"
+        printInfo()
+        drawingCircles()
+        plt.axes()
+        plt.grid()
+        plt.axis('scaled')
+        plt.show()
 elif (mode == 2):
     generateCircles()
     print circlesCentres
@@ -204,5 +223,11 @@ elif (mode == 2):
         output()
     else:
         print "\nIs not possible for this case"
+        printInfo()
+        drawingCircles()
+        plt.axes()
+        plt.grid()
+        plt.axis('scaled')
+        plt.show()
 else:
     print "Uncorrect mode!"
