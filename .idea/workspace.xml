@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9796aca2-dfb4-45fc-9806-8858fee17321" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/inputCircle_1.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/inputCircle_2.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/inputCircle_3.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/inputCircle_4.txt" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/circle.py" afterPath="$PROJECT_DIR$/circle.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/inputCircle.txt" afterPath="$PROJECT_DIR$/inputCircle.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cutting.py" afterPath="$PROJECT_DIR$/cutting.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/output.txt" afterPath="$PROJECT_DIR$/output.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/outputCircle.txt" afterPath="$PROJECT_DIR$/outputCircle.txt" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -24,8 +17,8 @@
       <file leaf-file-name="cutting.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cutting.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="71" column="18" lean-forward="true" selection-start-line="71" selection-start-column="18" selection-end-line="71" selection-end-column="18" />
+            <state relative-caret-position="714">
+              <caret line="296" column="0" lean-forward="false" selection-start-line="296" selection-start-column="0" selection-end-line="296" selection-end-column="0" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -268,11 +261,16 @@
           <line>132</line>
           <option name="timeStamp" value="21" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/cutting.py</url>
+          <line>216</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="23" />
+      <option name="time" value="25" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
@@ -679,8 +677,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cutting.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="71" column="18" lean-forward="true" selection-start-line="71" selection-start-column="18" selection-end-line="71" selection-end-column="18" />
+        <state relative-caret-position="714">
+          <caret line="296" column="0" lean-forward="false" selection-start-line="296" selection-start-column="0" selection-end-line="296" selection-end-column="0" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>

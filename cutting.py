@@ -5,8 +5,18 @@ inputFile = open("input.txt", "r")
 outputFile = open("output.txt", "w")
 
 #global variable
+numberLine = 5
 polygon = []
 line = []
+startPoint = []
+finishPoint = []
+
+cutLineStart = []
+cutLineFinish = []
+
+borderLine = []
+insideLine = []
+outsideLine = []
 
 #parse of string to list for point
 def parseStringToPolygon():
@@ -68,12 +78,10 @@ def generatePolygon():
 
 # generate random line
 def generateLinePoints():
-    for i in range(5):
-        point = []
-        while (line.__len__() != 0):
-            line.pop()
-        while(line.__len__() != 2):
-            line.append([rnd.randint(-10, 10),
+    for i in range(numberLine):
+        startPoint.append([rnd.randint(-10, 10),
+                           rnd.randint(-10, 10)])
+        finishPoint.append([rnd.randint(-10, 10),
                            rnd.randint(-10, 10)])
 
 def checkLine(flagCheckPoint):
@@ -131,6 +139,112 @@ def checkLine(flagCheckPoint):
             continue
     return False
 
+def pointInsidePolygon(point):
+    intersection = 0
+    for currentPoint in polygon:
+        indexCurrentPoint = polygon.index(currentPoint)
+
+        if (indexCurrentPoint != polygon.__len__() - 1):
+            nextPoint = polygon[indexCurrentPoint + 1]
+        else:
+            nextPoint = polygon[0]
+
+        maxY = max(currentPoint[1], nextPoint[1])
+        minY = min(currentPoint[1], nextPoint[1])
+
+        minX = min(currentPoint[0], nextPoint[0])
+
+        if (minY <= point[1] <= maxY and point[0] < minX):
+            intersection += 1
+
+    if (intersection % 2 == 1):
+        return True
+    return False
+
+def findIntersection():
+    while line.__len__() != 0:
+        line.pop()
+    for i in range(numberLine):
+        for currentPoint in polygon:
+            indexCurrentPoint = polygon.index(currentPoint)
+            intersectionPoints = []
+
+            if (indexCurrentPoint != polygon.__len__()-1):
+                nextPoint = polygon[indexCurrentPoint + 1]
+            else:
+                nextPoint = polygon[0]
+
+            if (pointInsidePolygon(startPoint) and pointInsidePolygon(finishPoint)):
+                insideLine.append([startPoint[i], finishPoint[i]])
+                intersectionPoints.append(None)
+                outsideLine.append(None)
+                borderLine.append(None)
+            if (not(pointInsidePolygon(startPoint)) and not(pointInsidePolygon(finishPoint) and checkLine(False))):
+                outsideLine.append([startPoint[i], finishPoint[i]])
+                insideLine.append(None)
+                intersectionPoints.append(None)
+                borderLine.append(None)
+            else:
+                kLine = None
+                bLine = None
+                kPolygon = None
+                bPilygon = None
+
+                if (finishPoint[i][0] - startPoint[i][0] != 0):
+                    kLine = (finishPoint[i][1] - startPoint[i][1]) / (finishPoint[i][0] - startPoint[i][0])
+                    bLine = startPoint[i][1] - kLine*startPoint[i][0]
+
+                if (currentPoint[0] - nextPoint[0] != 0):
+                    kPolygon = (nextPoint[1] - currentPoint[1]) / (nextPoint[0] - currentPoint[0])
+                    bPolygon = currentPoint[1] - kPolygon*currentPoint[0]
+
+                if (kLine != kPolygon):
+                    x = (bLine - bPolygon) / (kPolygon - kLine)
+                    y = kLine * x + bLine
+
+                    intersectionPoints.append([x, y])
+                else:
+                    borderLine.append(currentPoint)
+                    borderLine.append(nextPoint)
+                    borderLine.append(startPoint[i])
+                    borderLine.append(finishPoint[i])
+                    borderLine.sort()
+        if (borderLine.__len__() != i+1):
+            borderLine.append(None)
+
+
+def internal():
+    return
+
+def external():
+    return
+
+def externalBound():
+    return
+
+def internalBound():
+    return
+
+def bound():
+    return
+
+def unBound():
+    return
+
+def cut(c):
+    options = {
+        '<' : internal,
+        '>' : external,
+        '>=' : externalBound,
+        '<=' : internalBound,
+        '=' : bound,
+        '!' : unBound
+    }
+    try:
+        options[c]
+    finally:
+        print "Incorrect symbol"
+
 def drawingPolygon(n):
     i = 0
     for i in range(n):
@@ -142,16 +256,17 @@ def drawingPolygon(n):
 
 def drawingLine():
     #drawing line
-    drawLine = plt.Line2D((line[1][0], line[0][0]),
-                             (line[1][1], line[0][1]),
-                             lw=2.5,
-                             ls='-.',
-                             marker='.',
-                             markersize=50,
-                             markerfacecolor='r',
-                             markeredgecolor='r',
-                             alpha=0.5)
-    plt.gca().add_line(drawLine)
+    for i in range(numberLine):
+        drawLine = plt.Line2D((startPoint[i][0], finishPoint[i][0]),
+                              (startPoint[i][1], finishPoint[i][1]),
+                               lw=2.5,
+                               ls='-.',
+                               marker='.',
+                               markersize=50,
+                               markerfacecolor='r',
+                               markeredgecolor='r',
+                               alpha=0.5)
+        plt.gca().add_line(drawLine)
 
 def printInfo():
     outputFile.write("Number of point: " + polygon.__len__().__str__())
@@ -161,9 +276,11 @@ def printInfo():
 
 def output():
     printInfo()
+    print startPoint
+    print finishPoint
     drawingLine()
     drawingPolygon(polygon.__len__())
-    print checkLine(False)
+    # print checkLine(False)
     plt.axes()
     plt.grid()
     plt.axis('scaled')
@@ -177,6 +294,8 @@ if (mode == 1):
 elif (mode == 2):
     generatePolygon()
     generateLinePoints()
+    c = input("Enter mode of cutting:\n")
+    cut(c)
     output()
 else:
     print "Uncorrect mode!"
