@@ -5,7 +5,7 @@ inputFile = open("input.txt", "r")
 outputFile = open("output.txt", "w")
 
 #global variable
-numberLine = 5
+numberLine = 1
 polygon = []
 line = []
 startPoint = []
@@ -154,7 +154,7 @@ def pointInsidePolygon(point):
 
         minX = min(currentPoint[0], nextPoint[0])
 
-        if (minY <= point[1] <= maxY and point[0] < minX):
+        if (minY <= point[1] and point[1] <= maxY and point[0] < minX):
             intersection += 1
 
     if (intersection % 2 == 1):
@@ -162,55 +162,78 @@ def pointInsidePolygon(point):
     return False
 
 def findIntersection():
-    while line.__len__() != 0:
-        line.pop()
     for i in range(numberLine):
+        while line.__len__() != 0:
+            line.pop()
+
+        line.append(startPoint[i])
+        line.append(finishPoint[i])
+        intersectionPoints = []
+
+        # if (checkLine(False))
+
+        if (pointInsidePolygon(startPoint[i]) and pointInsidePolygon(finishPoint[i])):
+            insideLine.append([startPoint[i], finishPoint[i]])
+            continue
+
+        if (checkLine(False) == False):
+            outsideLine.append([startPoint[i], finishPoint[i]])
+            continue
+
         for currentPoint in polygon:
             indexCurrentPoint = polygon.index(currentPoint)
-            intersectionPoints = []
 
             if (indexCurrentPoint != polygon.__len__()-1):
                 nextPoint = polygon[indexCurrentPoint + 1]
             else:
                 nextPoint = polygon[0]
 
-            if (pointInsidePolygon(startPoint) and pointInsidePolygon(finishPoint)):
-                insideLine.append([startPoint[i], finishPoint[i]])
-                intersectionPoints.append(None)
-                outsideLine.append(None)
-                borderLine.append(None)
-            if (not(pointInsidePolygon(startPoint)) and not(pointInsidePolygon(finishPoint) and checkLine(False))):
-                outsideLine.append([startPoint[i], finishPoint[i]])
-                insideLine.append(None)
-                intersectionPoints.append(None)
-                borderLine.append(None)
-            else:
-                kLine = None
-                bLine = None
-                kPolygon = None
-                bPilygon = None
+            kLine = None
+            bLine = None
+            kPolygon = None
+            bPilygon = None
 
-                if (finishPoint[i][0] - startPoint[i][0] != 0):
-                    kLine = (finishPoint[i][1] - startPoint[i][1]) / (finishPoint[i][0] - startPoint[i][0])
-                    bLine = startPoint[i][1] - kLine*startPoint[i][0]
+            if (finishPoint[i][0] - startPoint[i][0] != 0):
+                kLine = float((finishPoint[i][1] - startPoint[i][1]) / (finishPoint[i][0] - startPoint[i][0]))
+                bLine = float(startPoint[i][1] - kLine*startPoint[i][0])
 
-                if (currentPoint[0] - nextPoint[0] != 0):
-                    kPolygon = (nextPoint[1] - currentPoint[1]) / (nextPoint[0] - currentPoint[0])
-                    bPolygon = currentPoint[1] - kPolygon*currentPoint[0]
+            if (currentPoint[0] - nextPoint[0] != 0):
+                kPolygon = float((nextPoint[1] - currentPoint[1]) / (nextPoint[0] - currentPoint[0]))
+                bPolygon = float(currentPoint[1] - kPolygon*currentPoint[0])
 
-                if (kLine != kPolygon):
-                    x = (bLine - bPolygon) / (kPolygon - kLine)
-                    y = kLine * x + bLine
-
-                    intersectionPoints.append([x, y])
+            if (kLine != kPolygon):
+                if (kLine == None):
+                    x = startPoint[i][0]
+                    y = float(kPolygon*x + bPolygon)
+                elif (kPolygon == None):
+                    x = currentPoint[0]
+                    y = float(kLine*x + bLine)
                 else:
-                    borderLine.append(currentPoint)
-                    borderLine.append(nextPoint)
-                    borderLine.append(startPoint[i])
-                    borderLine.append(finishPoint[i])
-                    borderLine.sort()
-        if (borderLine.__len__() != i+1):
-            borderLine.append(None)
+                    x = float((bLine - bPolygon) / (kPolygon - kLine))
+                    y = float(kLine * x + bLine)
+
+                intersectionPoints.append([x, y])
+            else:
+                if (kLine != None):
+                    bLine = float(startPoint[i][1] - kLine*startPoint[i][0])
+                    bPolygon = float(currentPoint[1] - kPolygon*currentPoint[1])
+
+                if (bLine == bPolygon and bPolygon != None or
+                    finishPoint[0] == currentPoint[0] and bPolygon == None):
+                    tmpBorderLine = []
+                    tmpBorderLine.append(currentPoint)
+                    tmpBorderLine.append(nextPoint)
+                    tmpBorderLine.append(startPoint[i])
+                    tmpBorderLine.append(finishPoint[i])
+                    tmpBorderLine.sort(key=lambda tmp: tmpBorderLine[1])
+                    borderLine.append(tmpBorderLine)
+
+    intersectionPoints.append(startPoint[i])
+    intersectionPoints.append(finishPoint[i])
+    intersectionPoints.sort(key = lambda point : intersectionPoints[0])
+    line.append(intersectionPoints)
+    while (intersectionPoints.__len__() != 0):
+        intersectionPoints.pop()
 
 
 def internal():
@@ -294,8 +317,9 @@ if (mode == 1):
 elif (mode == 2):
     generatePolygon()
     generateLinePoints()
-    c = input("Enter mode of cutting:\n")
-    cut(c)
+    # c = input("Enter mode of cutting:\n")
+    # cut(c)
     output()
+    findIntersection()
 else:
     print "Uncorrect mode!"
